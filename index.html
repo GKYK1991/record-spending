@@ -119,11 +119,28 @@
       <div class="card">
         <h2>Backup</h2>
 
-        <button class="settings-button" onclick="exportCSV()">Export CSV Backup</button>
-        <button class="settings-button">Import CSV Backup - Later</button>
+        <button class="settings-button" onclick="exportCSV()">
+          Export CSV Backup
+        </button>
+
+        <button class="settings-button" onclick="exportFullBackup()">
+          Export Full Backup
+        </button>
+
+        <label class="settings-button" for="importFullBackupInput">
+          Import Full Backup
+        </label>
+
+        <input
+          id="importFullBackupInput"
+          type="file"
+          accept="application/json,.json"
+          onchange="importFullBackup()"
+          style="display: none;"
+        />
 
         <p class="help-text">
-          CSV backup will save spending text records. Photos are kept inside this browser storage.
+          CSV backup saves text records only. Full Backup saves spending records and photos.
         </p>
       </div>
 
@@ -142,7 +159,7 @@
 
         <div class="summary-row">
           <span>Version</span>
-          <strong>1.0</strong>
+          <strong>1.1</strong>
         </div>
       </div>
     </section>
