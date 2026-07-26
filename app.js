@@ -71,14 +71,6 @@ function setDefaultDateTime() {
   dateInput.value = local;
 }
 
-function openCamera() {
-  document.getElementById("cameraInput").click();
-}
-
-function openPhotoLibrary() {
-  document.getElementById("photoInput").click();
-}
-
 function previewSelectedPhoto(inputId) {
   const file = document.getElementById(inputId).files[0];
   const preview = document.getElementById("photoPreview");
