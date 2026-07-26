@@ -295,9 +295,7 @@ function renderActivity() {
           expense.photo
             ? `
               <img class="expense-photo" src="${expense.photo}" />
-              <a class="photo-link" href="${expense.photo}" download="record-spending-photo-${expense.id}.jpg">
-                Open / Save Photo
-              </a>
+              <p class="help-text">Long press photo to save to Photos.</p>
             `
             : ""
         }
@@ -366,12 +364,92 @@ function exportCSV() {
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
 
+  const dateText = new Date()
+    .toISOString()
+    .slice(0, 19)
+    .replaceAll(":", "-");
+
   const link = document.createElement("a");
   link.href = url;
-  link.download = "RecordSpendingBackup.csv";
+  link.download = `RecordSpendingBackup_${dateText}.csv`;
   link.click();
 
   URL.revokeObjectURL(url);
+}
+
+function exportFullBackup() {
+  if (expenses.length === 0) {
+    alert("No records to export.");
+    return;
+  }
+
+  const backup = {
+    appName: "Record Spending Web",
+    version: "1.1",
+    exportedAt: new Date().toISOString(),
+    records: expenses
+  };
+
+  const json = JSON.stringify(backup, null, 2);
+  const blob = new Blob([json], { type: "application/json;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+
+  const dateText = new Date()
+    .toISOString()
+    .slice(0, 19)
+    .replaceAll(":", "-");
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `RecordSpendingFullBackup_${dateText}.json`;
+  link.click();
+
+  URL.revokeObjectURL(url);
+}
+
+function importFullBackup() {
+  const input = document.getElementById("importFullBackupInput");
+  const file = input.files[0];
+
+  if (!file) {
+    return;
+  }
+
+  const confirmImport = confirm(
+    "Import full backup? This will replace all current records in this browser."
+  );
+
+  if (!confirmImport) {
+    input.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function (event) {
+    try {
+      const backup = JSON.parse(event.target.result);
+
+      if (!backup.records || !Array.isArray(backup.records)) {
+        alert("Invalid backup file.");
+        input.value = "";
+        return;
+      }
+
+      expenses = backup.records;
+      saveToStorage();
+      renderAll();
+
+      alert("Full backup imported successfully.");
+      input.value = "";
+      showPage("activity");
+    } catch (error) {
+      alert("Failed to import backup file.");
+      input.value = "";
+    }
+  };
+
+  reader.readAsText(file);
 }
 
 function csvEscape(value) {
