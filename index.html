@@ -123,6 +123,18 @@
           Export CSV Backup
         </button>
 
+        <label class="settings-button" for="importCSVInput">
+          Import CSV Backup
+        </label>
+
+        <input
+          id="importCSVInput"
+          type="file"
+          accept=".csv,text/csv"
+          onchange="importCSVBackup()"
+          style="display: none;"
+        />
+
         <button class="settings-button" onclick="exportFullBackup()">
           Export Full Backup
         </button>
@@ -159,7 +171,7 @@
 
         <div class="summary-row">
           <span>Version</span>
-          <strong>1.1</strong>
+          <strong>1.2</strong>
         </div>
       </div>
     </section>
