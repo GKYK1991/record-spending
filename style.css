@@ -291,3 +291,9 @@ textarea {
   background: #ede9fe;
   color: #5146e8;
 }
+
+.real-photo-input {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+}
