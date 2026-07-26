@@ -71,6 +71,34 @@ function setDefaultDateTime() {
   dateInput.value = local;
 }
 
+function openCamera() {
+  document.getElementById("cameraInput").click();
+}
+
+function openPhotoLibrary() {
+  document.getElementById("photoInput").click();
+}
+
+function previewSelectedPhoto(inputId) {
+  const file = document.getElementById(inputId).files[0];
+  const preview = document.getElementById("photoPreview");
+
+  if (!file) {
+    preview.style.display = "none";
+    preview.src = "";
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function (event) {
+    preview.src = event.target.result;
+    preview.style.display = "block";
+  };
+
+  reader.readAsDataURL(file);
+}
+
 async function saveSpending() {
   const amount = Number(document.getElementById("amountInput").value);
   const merchant = document.getElementById("merchantInput").value.trim();
@@ -79,7 +107,10 @@ async function saveSpending() {
   const payment = document.getElementById("paymentInput").value;
   const date = document.getElementById("dateInput").value;
   const remarks = document.getElementById("remarksInput").value.trim();
-  const photoFile = document.getElementById("photoInput").files[0];
+
+  const cameraFile = document.getElementById("cameraInput").files[0];
+  const libraryFile = document.getElementById("photoInput").files[0];
+  const photoFile = cameraFile || libraryFile;
 
   if (!amount || amount <= 0) {
     alert("Please enter amount.");
@@ -110,6 +141,7 @@ async function saveSpending() {
   document.getElementById("amountInput").value = "";
   document.getElementById("merchantInput").value = "";
   document.getElementById("remarksInput").value = "";
+  document.getElementById("cameraInput").value = "";
   document.getElementById("photoInput").value = "";
   document.getElementById("photoPreview").style.display = "none";
   document.getElementById("photoPreview").src = "";
@@ -118,26 +150,6 @@ async function saveSpending() {
 
   alert("Spending saved.");
   showPage("activity");
-}
-
-function previewSelectedPhoto() {
-  const file = document.getElementById("photoInput").files[0];
-  const preview = document.getElementById("photoPreview");
-
-  if (!file) {
-    preview.style.display = "none";
-    preview.src = "";
-    return;
-  }
-
-  const reader = new FileReader();
-
-  reader.onload = function (event) {
-    preview.src = event.target.result;
-    preview.style.display = "block";
-  };
-
-  reader.readAsDataURL(file);
 }
 
 function resizePhoto(file) {
