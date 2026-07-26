@@ -377,6 +377,155 @@ function exportCSV() {
   URL.revokeObjectURL(url);
 }
 
+function importCSVBackup() {
+  const input = document.getElementById("importCSVInput");
+  const file = input.files[0];
+
+  if (!file) return;
+
+  const confirmImport = confirm(
+    "Import CSV backup? This will replace all current records in this browser. Photos will not be restored from CSV."
+  );
+
+  if (!confirmImport) {
+    input.value = "";
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function (event) {
+    try {
+      const csvText = event.target.result;
+      const rows = parseCSV(csvText);
+
+      if (rows.length < 2) {
+        alert("CSV file is empty or invalid.");
+        input.value = "";
+        return;
+      }
+
+      const headers = rows[0].map((header) => header.trim().toLowerCase());
+      const importedRecords = [];
+
+      for (let i = 1; i < rows.length; i++) {
+        const row = rows[i];
+
+        if (!row || row.length === 0 || row.every((cell) => String(cell).trim() === "")) {
+          continue;
+        }
+
+        const record = rowToExpense(headers, row);
+
+        if (record) {
+          importedRecords.push(record);
+        }
+      }
+
+      expenses = importedRecords;
+      saveToStorage();
+      renderAll();
+
+      alert(`CSV imported successfully. ${importedRecords.length} records restored.`);
+      input.value = "";
+      showPage("activity");
+    } catch (error) {
+      alert("Failed to import CSV file.");
+      input.value = "";
+    }
+  };
+
+  reader.readAsText(file);
+}
+
+function rowToExpense(headers, row) {
+  const amount = Number(getCSVValue(headers, row, "amount"));
+
+  if (!amount || amount <= 0) {
+    return null;
+  }
+
+  const merchant = getCSVValue(headers, row, "merchant") || "Unknown";
+  const category = getCSVValue(headers, row, "category") || "Other";
+  const type = getCSVValue(headers, row, "type") || "Others";
+  const payment = getCSVValue(headers, row, "payment") || "Cash";
+  const dateValue = getCSVValue(headers, row, "date") || new Date().toISOString();
+  const remarks = getCSVValue(headers, row, "remarks") || "";
+
+  return {
+    id: Date.now() + Math.floor(Math.random() * 1000000),
+    amount,
+    merchant,
+    category,
+    type,
+    payment,
+    date: normalizeDate(dateValue),
+    remarks,
+    photo: ""
+  };
+}
+
+function getCSVValue(headers, row, name) {
+  const index = headers.indexOf(name.toLowerCase());
+
+  if (index === -1) {
+    return "";
+  }
+
+  return row[index] || "";
+}
+
+function normalizeDate(value) {
+  const parsed = new Date(value);
+
+  if (isNaN(parsed.getTime())) {
+    return new Date().toISOString();
+  }
+
+  return parsed.toISOString();
+}
+
+function parseCSV(text) {
+  const rows = [];
+  let currentRow = [];
+  let currentValue = "";
+  let insideQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const nextChar = text[i + 1];
+
+    if (char === '"' && insideQuotes && nextChar === '"') {
+      currentValue += '"';
+      i++;
+    } else if (char === '"') {
+      insideQuotes = !insideQuotes;
+    } else if (char === "," && !insideQuotes) {
+      currentRow.push(currentValue);
+      currentValue = "";
+    } else if ((char === "\n" || char === "\r") && !insideQuotes) {
+      if (char === "\r" && nextChar === "\n") {
+        i++;
+      }
+
+      currentRow.push(currentValue);
+      rows.push(currentRow);
+
+      currentRow = [];
+      currentValue = "";
+    } else {
+      currentValue += char;
+    }
+  }
+
+  if (currentValue !== "" || currentRow.length > 0) {
+    currentRow.push(currentValue);
+    rows.push(currentRow);
+  }
+
+  return rows;
+}
+
 function exportFullBackup() {
   if (expenses.length === 0) {
     alert("No records to export.");
@@ -385,7 +534,7 @@ function exportFullBackup() {
 
   const backup = {
     appName: "Record Spending Web",
-    version: "1.1",
+    version: "1.2",
     exportedAt: new Date().toISOString(),
     records: expenses
   };
