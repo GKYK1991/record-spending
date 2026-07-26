@@ -86,7 +86,6 @@
           <option>Cash</option>
           <option>DBS PayLah!</option>
           <option>GrabPay</option>
-          <option>HSBC</option>
         </select>
 
         <label>Date</label>
@@ -95,34 +94,15 @@
         <label>Remarks</label>
         <textarea id="remarksInput" placeholder="Optional remarks"></textarea>
 
-<label>Photo</label>
+        <label>Photo</label>
+        <input
+          id="photoInput"
+          type="file"
+          accept="image/*"
+          onchange="previewSelectedPhoto()"
+        />
 
-<label class="photo-action-button" for="cameraInput">
-  Take Photo
-</label>
-
-<input
-  id="cameraInput"
-  type="file"
-  accept="image/*"
-  capture="environment"
-  onchange="previewSelectedPhoto('cameraInput')"
-  class="real-photo-input"
-/>
-
-<label class="photo-action-button" for="photoInput">
-  Choose from Photos
-</label>
-
-<input
-  id="photoInput"
-  type="file"
-  accept="image/*"
-  onchange="previewSelectedPhoto('photoInput')"
-  class="real-photo-input"
-/>
-
-<img id="photoPreview" class="photo-preview" style="display: none;" />
+        <img id="photoPreview" class="photo-preview" style="display: none;" />
 
         <button class="primary-button" onclick="saveSpending()">Save Spending</button>
       </div>
