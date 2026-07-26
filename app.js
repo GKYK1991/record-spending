@@ -71,8 +71,8 @@ function setDefaultDateTime() {
   dateInput.value = local;
 }
 
-function previewSelectedPhoto(inputId) {
-  const file = document.getElementById(inputId).files[0];
+function previewSelectedPhoto() {
+  const file = document.getElementById("photoInput").files[0];
   const preview = document.getElementById("photoPreview");
 
   if (!file) {
@@ -99,10 +99,7 @@ async function saveSpending() {
   const payment = document.getElementById("paymentInput").value;
   const date = document.getElementById("dateInput").value;
   const remarks = document.getElementById("remarksInput").value.trim();
-
-  const cameraFile = document.getElementById("cameraInput").files[0];
-  const libraryFile = document.getElementById("photoInput").files[0];
-  const photoFile = cameraFile || libraryFile;
+  const photoFile = document.getElementById("photoInput").files[0];
 
   if (!amount || amount <= 0) {
     alert("Please enter amount.");
@@ -133,7 +130,6 @@ async function saveSpending() {
   document.getElementById("amountInput").value = "";
   document.getElementById("merchantInput").value = "";
   document.getElementById("remarksInput").value = "";
-  document.getElementById("cameraInput").value = "";
   document.getElementById("photoInput").value = "";
   document.getElementById("photoPreview").style.display = "none";
   document.getElementById("photoPreview").src = "";
