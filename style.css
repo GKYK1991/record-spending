@@ -193,6 +193,19 @@ textarea {
   font-weight: 800;
 }
 
+.photo-action-button {
+  width: 100%;
+  border: 0;
+  border-radius: 16px;
+  padding: 15px;
+  margin-top: 10px;
+  background: #ede9fe;
+  color: #5146e8;
+  font-size: 16px;
+  font-weight: 800;
+  text-align: center;
+}
+
 .settings-button {
   width: 100%;
   border: 0;
@@ -277,17 +290,4 @@ textarea {
 .bottom-nav button.active {
   background: #ede9fe;
   color: #5146e8;
-}
-
-.photo-action-button {
-  width: 100%;
-  border: 0;
-  border-radius: 16px;
-  padding: 15px;
-  margin-top: 10px;
-  background: #ede9fe;
-  color: #5146e8;
-  font-size: 16px;
-  font-weight: 800;
-  text-align: center;
 }
