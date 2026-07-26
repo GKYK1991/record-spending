@@ -94,16 +94,34 @@
         <label>Remarks</label>
         <textarea id="remarksInput" placeholder="Optional remarks"></textarea>
 
-        <label>Photo</label>
-        <input
-          id="photoInput"
-          type="file"
-          accept="image/*"
-          capture="environment"
-          onchange="previewSelectedPhoto()"
-        />
+<label>Photo</label>
 
-        <img id="photoPreview" class="photo-preview" style="display: none;" />
+<button class="photo-action-button" type="button" onclick="openCamera()">
+  Take Photo
+</button>
+
+<button class="photo-action-button" type="button" onclick="openPhotoLibrary()">
+  Choose from Photos
+</button>
+
+<input
+  id="cameraInput"
+  type="file"
+  accept="image/*"
+  capture="environment"
+  onchange="previewSelectedPhoto('cameraInput')"
+  style="display: none;"
+/>
+
+<input
+  id="photoInput"
+  type="file"
+  accept="image/*"
+  onchange="previewSelectedPhoto('photoInput')"
+  style="display: none;"
+/>
+
+<img id="photoPreview" class="photo-preview" style="display: none;" />
 
         <button class="primary-button" onclick="saveSpending()">Save Spending</button>
       </div>
