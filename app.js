@@ -71,7 +71,7 @@ function setDefaultDateTime() {
   dateInput.value = local;
 }
 
-function saveSpending() {
+async function saveSpending() {
   const amount = Number(document.getElementById("amountInput").value);
   const merchant = document.getElementById("merchantInput").value.trim();
   const category = document.getElementById("categoryInput").value;
@@ -79,10 +79,17 @@ function saveSpending() {
   const payment = document.getElementById("paymentInput").value;
   const date = document.getElementById("dateInput").value;
   const remarks = document.getElementById("remarksInput").value.trim();
+  const photoFile = document.getElementById("photoInput").files[0];
 
   if (!amount || amount <= 0) {
     alert("Please enter amount.");
     return;
+  }
+
+  let photo = "";
+
+  if (photoFile) {
+    photo = await resizePhoto(photoFile);
   }
 
   const expense = {
@@ -93,7 +100,8 @@ function saveSpending() {
     type,
     payment,
     date: date || new Date().toISOString(),
-    remarks
+    remarks,
+    photo
   };
 
   expenses.unshift(expense);
@@ -102,10 +110,63 @@ function saveSpending() {
   document.getElementById("amountInput").value = "";
   document.getElementById("merchantInput").value = "";
   document.getElementById("remarksInput").value = "";
+  document.getElementById("photoInput").value = "";
+  document.getElementById("photoPreview").style.display = "none";
+  document.getElementById("photoPreview").src = "";
+
   setDefaultDateTime();
 
   alert("Spending saved.");
   showPage("activity");
+}
+
+function previewSelectedPhoto() {
+  const file = document.getElementById("photoInput").files[0];
+  const preview = document.getElementById("photoPreview");
+
+  if (!file) {
+    preview.style.display = "none";
+    preview.src = "";
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = function (event) {
+    preview.src = event.target.result;
+    preview.style.display = "block";
+  };
+
+  reader.readAsDataURL(file);
+}
+
+function resizePhoto(file) {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+
+    reader.onload = function (event) {
+      const img = new Image();
+
+      img.onload = function () {
+        const maxWidth = 1200;
+        const scale = Math.min(1, maxWidth / img.width);
+
+        const canvas = document.createElement("canvas");
+        canvas.width = img.width * scale;
+        canvas.height = img.height * scale;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+        const compressedPhoto = canvas.toDataURL("image/jpeg", 0.75);
+        resolve(compressedPhoto);
+      };
+
+      img.src = event.target.result;
+    };
+
+    reader.readAsDataURL(file);
+  });
 }
 
 function deleteExpense(id) {
@@ -230,7 +291,18 @@ function renderActivity() {
 
         ${expense.remarks ? `<p class="help-text">${expense.remarks}</p>` : ""}
 
-        <button class="settings-button" onclick="deleteExpense(${expense.id})">
+        ${
+          expense.photo
+            ? `
+              <img class="expense-photo" src="${expense.photo}" />
+              <a class="photo-link" href="${expense.photo}" download="record-spending-photo-${expense.id}.jpg">
+                Open / Save Photo
+              </a>
+            `
+            : ""
+        }
+
+        <button class="delete-button" onclick="deleteExpense(${expense.id})">
           Delete
         </button>
       </div>

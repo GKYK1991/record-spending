@@ -45,7 +45,7 @@
       </div>
 
       <div class="card">
-        <h2>By Category</h2>
+        <h2>By Category & Type</h2>
         <div id="categorySpendingList"></div>
       </div>
     </section>
@@ -81,7 +81,6 @@
         <label>Pay With</label>
         <select id="paymentInput">
           <option>Citi</option>
-          <option>Citi</option>
           <option>POSB</option>
           <option>TRUST</option>
           <option>Cash</option>
@@ -95,6 +94,17 @@
 
         <label>Remarks</label>
         <textarea id="remarksInput" placeholder="Optional remarks"></textarea>
+
+        <label>Photo</label>
+        <input
+          id="photoInput"
+          type="file"
+          accept="image/*"
+          capture="environment"
+          onchange="previewSelectedPhoto()"
+        />
+
+        <img id="photoPreview" class="photo-preview" style="display: none;" />
 
         <button class="primary-button" onclick="saveSpending()">Save Spending</button>
       </div>
@@ -114,7 +124,7 @@
         <button class="settings-button">Import CSV Backup - Later</button>
 
         <p class="help-text">
-          Save your records regularly before changing phone or clearing browser data.
+          CSV backup will save spending text records. Photos are kept inside this browser storage.
         </p>
       </div>
 
