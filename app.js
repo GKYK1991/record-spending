@@ -422,13 +422,20 @@ function importCSVBackup() {
         }
       }
 
+      if (importedRecords.length === 0) {
+        alert("No valid records found in CSV.");
+        input.value = "";
+        return;
+      }
+
       expenses = importedRecords;
       saveToStorage();
-      renderAll();
 
       alert(`CSV imported successfully. ${importedRecords.length} records restored.`);
+
       input.value = "";
       showPage("activity");
+      renderAll();
     } catch (error) {
       alert("Failed to import CSV file.");
       input.value = "";
@@ -476,6 +483,14 @@ function getCSVValue(headers, row, name) {
 }
 
 function normalizeDate(value) {
+  if (!value) {
+    return new Date().toISOString();
+  }
+
+  if (value.includes("T")) {
+    return value;
+  }
+
   const parsed = new Date(value);
 
   if (isNaN(parsed.getTime())) {
@@ -560,9 +575,7 @@ function importFullBackup() {
   const input = document.getElementById("importFullBackupInput");
   const file = input.files[0];
 
-  if (!file) {
-    return;
-  }
+  if (!file) return;
 
   const confirmImport = confirm(
     "Import full backup? This will replace all current records in this browser."
