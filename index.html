@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Record Spending</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <main class="app">
+
+    <header class="top-bar">
+      <div>
+        <p class="app-name">Record Spending</p>
+        <h1 id="pageTitle">Overview</h1>
+      </div>
+
+      <button class="round-button" onclick="showPage('add')">＋</button>
+    </header>
+
+    <!-- OVERVIEW PAGE -->
+    <section id="overviewPage" class="page active-page">
+      <div class="hero-card">
+        <p>SPENT THIS MONTH</p>
+        <h2 id="monthTotal">SGD 0.00</h2>
+        <span id="transactionCount">0 transactions</span>
+      </div>
+
+      <div class="grid">
+        <div class="mini-card">
+          <p>Transactions</p>
+          <h3 id="miniTransactionCount">0</h3>
+        </div>
+
+        <div class="mini-card">
+          <p>Daily Average</p>
+          <h3 id="dailyAverage">SGD 0.00</h3>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Card Spending</h2>
+        <div id="cardSpendingList"></div>
+      </div>
+
+      <div class="card">
+        <h2>By Category</h2>
+        <div id="categorySpendingList"></div>
+      </div>
+    </section>
+
+    <!-- ADD PAGE -->
+    <section id="addPage" class="page">
+      <div class="card">
+        <h2>Add Spending</h2>
+
+        <label>Amount</label>
+        <input id="amountInput" type="number" step="0.01" placeholder="0.00" />
+
+        <label>Merchant</label>
+        <input id="merchantInput" type="text" placeholder="Example: Koufu" />
+
+        <label>Category</label>
+        <select id="categoryInput" onchange="updateTypeOptions()">
+          <option>Food</option>
+          <option>Transport</option>
+          <option>Shopping</option>
+          <option>Child Expenses</option>
+          <option>Medical</option>
+          <option>Grab Pay Topup</option>
+          <option>Bills</option>
+          <option>Subscriptions</option>
+          <option>Fun</option>
+          <option>Other</option>
+        </select>
+
+        <label>Type</label>
+        <select id="typeInput"></select>
+
+        <label>Pay With</label>
+        <select id="paymentInput">
+          <option>Citi</option>
+          <option>Citi</option>
+          <option>POSB</option>
+          <option>TRUST</option>
+          <option>Cash</option>
+          <option>DBS PayLah!</option>
+          <option>GrabPay</option>
+          <option>HSBC</option>
+        </select>
+
+        <label>Date</label>
+        <input id="dateInput" type="datetime-local" />
+
+        <label>Remarks</label>
+        <textarea id="remarksInput" placeholder="Optional remarks"></textarea>
+
+        <button class="primary-button" onclick="saveSpending()">Save Spending</button>
+      </div>
+    </section>
+
+    <!-- ACTIVITY PAGE -->
+    <section id="activityPage" class="page">
+      <div id="activityList"></div>
+    </section>
+
+    <!-- SETTINGS PAGE -->
+    <section id="settingsPage" class="page">
+      <div class="card">
+        <h2>Backup</h2>
+
+        <button class="settings-button" onclick="exportCSV()">Export CSV Backup</button>
+        <button class="settings-button">Import CSV Backup - Later</button>
+
+        <p class="help-text">
+          Save your records regularly before changing phone or clearing browser data.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>App Info</h2>
+
+        <div class="summary-row">
+          <span>App Name</span>
+          <strong>Record Spending Web</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Total Records</span>
+          <strong id="totalRecords">0</strong>
+        </div>
+
+        <div class="summary-row">
+          <span>Version</span>
+          <strong>1.0</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <button id="overviewTab" class="active" onclick="showPage('overview')">Overview</button>
+      <button id="addTab" onclick="showPage('add')">Add</button>
+      <button id="activityTab" onclick="showPage('activity')">Activity</button>
+      <button id="settingsTab" onclick="showPage('settings')">Settings</button>
+    </nav>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
