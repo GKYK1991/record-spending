@@ -199,15 +199,18 @@ textarea {
 }
 
 .settings-button {
+  display: block;
   width: 100%;
   border: 0;
   border-radius: 16px;
   padding: 16px;
   margin-top: 12px;
   background: #f3f2f8;
+  color: #111;
   font-size: 16px;
   font-weight: 700;
   text-align: left;
+  text-decoration: none;
 }
 
 .delete-button {
@@ -241,18 +244,6 @@ textarea {
   margin-top: 12px;
   border-radius: 18px;
   border: 1px solid #eee;
-}
-
-.photo-link {
-  display: block;
-  margin-top: 10px;
-  padding: 12px;
-  text-align: center;
-  border-radius: 14px;
-  background: #ede9fe;
-  color: #5146e8;
-  font-weight: 800;
-  text-decoration: none;
 }
 
 .bottom-nav {
